@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Trade{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <h1>Trade Stocks</h1>
+    <div class="dashboard-container">
+        <div class="dashboard-card">
+            <h2>Place Order</h2>
+            <form id="trade-form">
+                <div class="form-group">
+                    <label for="symbol">Stock Symbol</label>
+                    <select name="symbol" id="symbol" required>
+                        {% for stock in stocks %}
+                        <option value="{{ stock.symbol }}">{{ stock.symbol }} - {{ stock.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" name="quantity" id="quantity" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="action">Action</label>
+                    <select name="action" id="action" required>
+                        <option value="buy">Buy</option>
+                        <option value="sell">Sell</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit Trade</button>
+            </form>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Market Prices</h2>
+            <div class="table-container">
+                <table id="market-data-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in stocks %}
+                        <tr>
+                            <td>{{ stock.symbol }}</td>
+                            <td>{{ stock.name }}</td>
+                            <td>${{ "%.2f"|format(stock.price) }}</td>
+                            <td class="{{ 'text-success' if stock.change > 0 else 'text-danger' }}">
+                                {{ "%.2f"|format(stock.change) }}%
+                            </td>
+                            <td>{{ stock.volume }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

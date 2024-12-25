@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Invest in Everything{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Invest in everything</h1>
+            <p>Online platform to invest in stocks, derivatives, mutual funds, ETFs, bonds, and more.</p>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Sign up for free</a>
+            {% else %}
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% endif %}
+        </div>
+        <img src="{{ url_for('static', filename='images/dashboard-preview.png') }}" alt="BullBear Trading Platform" class="hero-image">
+    </div>
+</div>
+
+<section class="features">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Real-time Trading</h3>
+                <p>Execute trades instantly with our advanced trading platform. Get real-time market data and lightning-fast order execution.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Advanced Analytics</h3>
+                <p>Make informed decisions with comprehensive market analysis tools, technical indicators, and real-time charts.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Secure Platform</h3>
+                <p>Trade with confidence on our highly secure and reliable platform. Your investments are protected by state-of-the-art security.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="products" class="features">
+    <div class="container">
+        <h2>Our Products</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Stocks & ETFs</h3>
+                <p>Invest in a wide range of stocks and ETFs from major exchanges worldwide.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Mutual Funds</h3>
+                <p>Access a diverse portfolio of mutual funds with different risk profiles and investment strategies.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Derivatives</h3>
+                <p>Trade futures and options with advanced order types and risk management tools.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="features">
+    <div class="container">
+        <h2>Pricing Plans</h2>
+        <div class="features-grid">
+            <div class="pricing-plan">
+                <h3>Basic</h3>
+                <ul>
+                    <li>Real-time quotes</li>
+                    <li>Basic charting tools</li>
+                    <li>$0 commission on stocks and ETFs</li>
+                </ul>
+                <p class="price">$0/month</p>
+                <a href="#" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="pricing-plan">
+                <h3>Pro</h3>
+                <ul>
+                    <li>Advanced charting and analytics</li>
+                    <li>Level II market data</li>
+                    <li>Margin trading</li>
+                </ul>
+                <p class="price">$19.99/month</p>
+                <a href="#" class="btn btn-primary">Upgrade to Pro</a>
+            </div>
+            <div class="pricing-plan">
+                <h3>Elite</h3>
+                <ul>
+                    <li>API access</li>
+                    <li>Dedicated support</li>
+                    <li>Advanced order types</li>
+                </ul>
+                <p class="price">$49.99/month</p>
+                <a href="#" class="btn btn-primary">Go Elite</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- <section id="support" class="features">
+    <div class="container">
+        <h2>Customer Support</h2>
+        <p>Our dedicated support team is here to help you with any questions or issues you may have.</p>
+        <div class="support-options">
+            <div class="support-option">
+                <h3>Email Support</h3>
+                <p>support@bullbear.com</p>
+            </div>
+            <div class="support-option">
+                <h3>Phone Support</h3>
+                <p>+1 (555) 123-4567</p>
+            </div>
+            <div class="support-option">
+                <h3>Live Chat</h3>
+                <p>Available 24/7 on our website</p>
+            </div>
+        </div>
+    </div>
+</section> -->
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    <p class="balance">Current Balance: $<span id="user-balance">{{ "%.2f"|format(current_user.balance) }}</span></p>
+
+    <div class="dashboard-container">
+        <div class="dashboard-card">
+            <h2>Portfolio Overview</h2>
+            <div class="chart-container">
+                <canvas id="portfolioChart"></canvas>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Performance</h2>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Recent Transactions</h2>
+            <div class="table-container">
+                <table id="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stock</th>
+                            <th>Action</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in recent_transactions %}
+                        <tr>
+                            <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ transaction.stock.symbol }}</td>
+                            <td>{{ transaction.transaction_type }}</td>
+                            <td>{{ transaction.quantity }}</td>
+                            <td>${{ "%.2f"|format(transaction.price) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- <div class="dashboard-card">
+            <h2>Market Overview</h2>
+            <div class="table-container">
+                <table id="market-data-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in stocks %}
+                        <tr>
+                            <td>{{ stock.symbol }}</td>
+                            <td>{{ stock.name }}</td>
+                            <td>${{ "%.2f"|format(stock.price) }}</td>
+                            <td class="{{ 'text-success' if stock.change > 0 else 'text-danger' }}">
+                                {{ "%.2f"|format(stock.change) }}%
+                            </td>
+                            <td>{{ stock.volume }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<script>
+    // Portfolio chart data
+    const portfolioData = {
+        labels: portfolio.map(item => item.stock.symbol),
+        datasets: [{
+            data: portfolio.map(item => item.quantity * item.stock.current_price),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)'
+            ]
+        }]
+    };
+    // Performance chart data
+    const performanceData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Portfolio Value',
+            data: [10000, 10500, 11000, 10800, 11500, 12000],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            tension: 0.1
+        }]
+    };
+
+    // Initialize charts when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+
+        new Chart(portfolioCtx, {
+            type: 'doughnut',
+            data: portfolioData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Portfolio Allocation'
+                    }
+                }
+            }
+        });
+
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: performanceData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Portfolio Performance'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

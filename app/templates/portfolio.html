@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <h1>Your Portfolio</h1>
+    <p>Total Value: $<span id="total-portfolio-value">{{ "%.2f"|format(total_value) }}</span></p>
+
+    <div class="dashboard-container">
+        <div class="dashboard-card">
+            <h2>Holdings</h2>
+            <div class="table-container">
+                <table id="portfolio-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Quantity</th>
+                            <th>Average Price</th>
+                            <th>Current Price</th>
+                            <th>Total Value</th>
+                            <th>Profit/Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in portfolio %}
+                        <tr>
+                            <td>{{ item.stock.symbol }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ "%.2f"|format(item.average_price) }}</td>
+                            <td>${{ "%.2f"|format(item.stock.price) }}</td>
+                            <td>${{ "%.2f"|format(item.total_value) }}</td>
+                            <td class="{{ 'text-success' if item.profit_loss >= 0 else 'text-danger' }}">
+                                ${{ "%.2f"|format(item.profit_loss) }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Portfolio Diversity</h2>
+            <div class="chart-container">
+                <canvas id="diversityChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const portfolioData = {
+            labels: portfolio.map(item => item.stock.symbol),
+            datasets: [{
+                data: portfolio.map(item => item.total_value),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)'
+                ]
+            }]
+        };
+
+        const diversityCtx = document.getElementById('diversityChart').getContext('2d');
+        new Chart(diversityCtx, {
+            type: 'pie',
+            data: portfolioData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Portfolio Diversity'
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+{% endblock %}
