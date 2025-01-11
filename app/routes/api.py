@@ -2,8 +2,14 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app import db
 from app.models import Stock, Portfolio, Transaction
+from app.stock_api import get_stock_price
+import yfinance as yf
+import logging
 
 bp = Blueprint('api', __name__)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 @bp.route('/api/trade', methods=['POST'])
 @login_required
@@ -13,48 +19,47 @@ def trade():
     quantity = int(data['quantity'])
     action = data['action']
 
-    stock = Stock.query.filter_by(symbol=symbol).first()
-    if not stock:
-        return jsonify({'error': 'Invalid stock symbol'}), 400
+    # Fetch real-time price
+    current_price = get_stock_price(symbol)
 
     if action == 'buy':
-        total_cost = stock.price * quantity
+        total_cost = current_price * quantity
         if current_user.balance < total_cost:
             return jsonify({'error': 'Insufficient funds'}), 400
         
         current_user.balance -= total_cost
-        portfolio_item = Portfolio.query.filter_by(user_id=current_user.id, stock_id=stock.id).first()
+        portfolio_item = Portfolio.query.filter_by(user_id=current_user.id, stock_id=symbol).first()
         if portfolio_item:
             new_quantity = portfolio_item.quantity + quantity
             new_average_price = (portfolio_item.average_price * portfolio_item.quantity + total_cost) / new_quantity
             portfolio_item.quantity = new_quantity
             portfolio_item.average_price = new_average_price
         else:
-            new_item = Portfolio(user_id=current_user.id, stock_id=stock.id, quantity=quantity, average_price=stock.price)
+            new_item = Portfolio(user_id=current_user.id, stock_id=symbol, quantity=quantity, average_price=current_price)
             db.session.add(new_item)
     
     elif action == 'sell':
-        portfolio_item = Portfolio.query.filter_by(user_id=current_user.id, stock_id=stock.id).first()
+        portfolio_item = Portfolio.query.filter_by(user_id=current_user.id, stock_id=symbol).first()
         if not portfolio_item or portfolio_item.quantity < quantity:
             return jsonify({'error': 'Insufficient stocks to sell'}), 400
         
-        total_value = stock.price * quantity
+        total_value = current_price * quantity
         current_user.balance += total_value
         portfolio_item.quantity -= quantity
         if portfolio_item.quantity == 0:
             db.session.delete(portfolio_item)
     
-    transaction = Transaction(user_id=current_user.id, stock_id=stock.id, quantity=quantity, price=stock.price, transaction_type=action)
+    transaction = Transaction(user_id=current_user.id, stock_id=symbol, quantity=quantity, price=current_price, transaction_type=action)
     db.session.add(transaction)
     db.session.commit()
     
     return jsonify({
-        'message': f'Successfully {action}ed {quantity} shares of {stock.symbol}',
+        'message': f'Successfully {action}ed {quantity} shares of {symbol}',
         'balance': current_user.balance,
-        'stock_price': stock.price
+        'stock_price': current_price
     })
 
-@bp.route('/api/portfolio')
+@bp.route('/api/portfolio', methods=['GET'])
 @login_required
 def get_portfolio():
     portfolio = Portfolio.query.filter_by(user_id=current_user.id).all()
@@ -68,7 +73,7 @@ def get_portfolio():
         'profit_loss': item.profit_loss
     } for item in portfolio])
 
-@bp.route('/api/transactions')
+@bp.route('/api/transactions', methods=['GET'])
 @login_required
 def get_transactions():
     transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.timestamp.desc()).limit(10).all()
@@ -80,17 +85,17 @@ def get_transactions():
         'timestamp': transaction.timestamp.isoformat()
     } for transaction in transactions])
 
-@bp.route('/api/market_data')
-def get_market_data():
-    stocks = Stock.query.all()
-    return jsonify([{
-        'symbol': stock.symbol,
-        'name': stock.name,
-        'price': stock.price,
-        'change': stock.change,
-        'volume': stock.volume,
-        'last_updated': stock.last_updated.isoformat()
-    } for stock in stocks])
+@bp.route('/api/market_data', methods=['GET'])
+@login_required
+def market_data():
+    stocks = Portfolio.query.filter_by(user_id=current_user.id).all()
+    stock_prices = {}
+    
+    for stock in stocks:
+        current_price = get_stock_price(stock.stock_id)
+        stock_prices[stock.stock_id] = current_price
+    
+    return jsonify(stock_prices)
 
 @bp.route('/api/chatbot', methods=['POST'])
 @login_required
@@ -110,3 +115,25 @@ def chatbot():
         response = "I'm here to help with any questions about stocks, trading, or your portfolio. What would you like to know?"
     
     return jsonify({'response': response})
+
+@bp.route('/api/search_stock', methods=['GET'])
+def search_stock():
+    query = request.args.get('query', '')
+    if not query:
+        return jsonify([])
+
+    try:
+        stock = yf.Ticker(query)
+        stock_info = stock.info
+        # Validate that required fields are available
+        if stock_info.get('symbol') and stock_info.get('longName') and stock_info.get('currentPrice') is not None:
+            return jsonify({
+                'symbol': stock_info['symbol'],
+                'name': stock_info['longName'],
+                'price': stock_info['currentPrice']
+            })
+        else:
+            return jsonify({'error': 'Stock information incomplete or not found'}), 404
+    except Exception as e:
+        logging.error(f"Error fetching stock data: {e}")  # Log the error
+        return jsonify({'error': 'Failed to fetch stock data. Please try again later.'}), 500

@@ -3,33 +3,75 @@
 {% block title %}Invest in Everything{% endblock %}
 
 {% block content %}
+<!-- Hero Section -->
 <div class="hero">
     <div class="container">
-        <div class="hero-content">
-            <h1>Invest in everything</h1>
-            <p>Online platform to invest in stocks, derivatives, mutual funds, ETFs, bonds, and more.</p>
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Sign up for free</a>
-            {% else %}
-                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
-            {% endif %}
+        <div class="hero-content animate-fadeInUp">
+            <span class="hero-badge">Trusted by 100,000+ investors</span>
+            <h1>Smart investing for everyone</h1>
+            <p class="hero-description">Experience the future of investing with BullBear's advanced trading platform. Start your journey to financial freedom today.</p>
+            <div class="hero-buttons">
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Start Trading Now</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline">Log In</a>
+                {% else %}
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+                {% endif %}
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">$2.5B+</span>
+                    <span class="stat-label">Trading Volume</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100K+</span>
+                    <span class="stat-label">Active Users</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime</span>
+                </div>
+            </div>
         </div>
-        <img src="{{ url_for('static', filename='images/dashboard-preview.png') }}" alt="BullBear Trading Platform" class="hero-image">
+        <div class="hero-image-container animate-fadeInUp">
+            <img src="{{ url_for('static', filename='images/dashboard-preview.png') }}" alt="BullBear Trading Platform" class="hero-image">
+            <div class="hero-image-overlay"></div>
+        </div>
     </div>
 </div>
 
+<!-- Features Section -->
 <section class="features">
     <div class="container">
+        <div class="section-header">
+            <h2>Why choose BullBear?</h2>
+            <p>Experience the advantages that make us the preferred choice for traders worldwide.</p>
+        </div>
         <div class="features-grid">
             <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
                 <h3>Real-time Trading</h3>
                 <p>Execute trades instantly with our advanced trading platform. Get real-time market data and lightning-fast order execution.</p>
             </div>
             <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
                 <h3>Advanced Analytics</h3>
                 <p>Make informed decisions with comprehensive market analysis tools, technical indicators, and real-time charts.</p>
             </div>
             <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
                 <h3>Secure Platform</h3>
                 <p>Trade with confidence on our highly secure and reliable platform. Your investments are protected by state-of-the-art security.</p>
             </div>
@@ -37,82 +79,184 @@
     </div>
 </section>
 
-<section id="products" class="features">
+<!-- Products Section -->
+<section id="products" class="products-section">
     <div class="container">
-        <h2>Our Products</h2>
-        <div class="features-grid">
-            <div class="feature-card">
+        <div class="section-header">
+            <h2>Investment Products</h2>
+            <p>Diversify your portfolio with our wide range of investment options</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
                 <h3>Stocks & ETFs</h3>
                 <p>Invest in a wide range of stocks and ETFs from major exchanges worldwide.</p>
+                <ul class="product-features">
+                    <li>Commission-free trading</li>
+                    <li>Real-time quotes</li>
+                    <li>Fractional shares</li>
+                </ul>
             </div>
-            <div class="feature-card">
+            <div class="product-card">
+                <div class="product-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
                 <h3>Mutual Funds</h3>
-                <p>Access a diverse portfolio of mutual funds with different risk profiles and investment strategies.</p>
+                <p>Access a diverse portfolio of mutual funds with different risk profiles.</p>
+                <ul class="product-features">
+                    <li>Professional management</li>
+                    <li>Diversified portfolios</li>
+                    <li>Low minimum investment</li>
+                </ul>
             </div>
-            <div class="feature-card">
+            <div class="product-card">
+                <div class="product-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
                 <h3>Derivatives</h3>
-                <p>Trade futures and options with advanced order types and risk management tools.</p>
+                <p>Trade futures and options with advanced order types and risk management.</p>
+                <ul class="product-features">
+                    <li>Advanced order types</li>
+                    <li>Risk management tools</li>
+                    <li>Real-time analytics</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
 
-<section id="pricing" class="features">
+<!-- Pricing Section -->
+<section id="pricing" class="pricing-section">
     <div class="container">
-        <h2>Pricing Plans</h2>
-        <div class="features-grid">
-            <div class="pricing-plan">
-                <h3>Basic</h3>
-                <ul>
+        <div class="section-header">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Choose the plan that best fits your trading needs</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Basic</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">0</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
                     <li>Real-time quotes</li>
                     <li>Basic charting tools</li>
-                    <li>$0 commission on stocks and ETFs</li>
+                    <li>$0 commission on stocks</li>
+                    <li>Market news access</li>
                 </ul>
-                <p class="price">$0/month</p>
-                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-outline">Get Started</a>
             </div>
-            <div class="pricing-plan">
-                <h3>Pro</h3>
-                <ul>
-                    <li>Advanced charting and analytics</li>
+            <div class="pricing-card featured">
+                <div class="pricing-badge">Most Popular</div>
+                <div class="pricing-header">
+                    <h3>Pro</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">19</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Advanced charting</li>
                     <li>Level II market data</li>
                     <li>Margin trading</li>
+                    <li>Priority support</li>
                 </ul>
-                <p class="price">$19.99/month</p>
                 <a href="#" class="btn btn-primary">Upgrade to Pro</a>
             </div>
-            <div class="pricing-plan">
-                <h3>Elite</h3>
-                <ul>
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Elite</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">49</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
                     <li>API access</li>
                     <li>Dedicated support</li>
+                    <li>Custom analytics</li>
                     <li>Advanced order types</li>
                 </ul>
-                <p class="price">$49.99/month</p>
-                <a href="#" class="btn btn-primary">Go Elite</a>
+                <a href="#" class="btn btn-outline">Go Elite</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- <section id="support" class="features">
+<!-- Testimonials Section -->
+<section class="testimonials-section">
     <div class="container">
-        <h2>Customer Support</h2>
-        <p>Our dedicated support team is here to help you with any questions or issues you may have.</p>
-        <div class="support-options">
-            <div class="support-option">
-                <h3>Email Support</h3>
-                <p>support@bullbear.com</p>
+        <div class="section-header">
+            <h2>What Our Users Say</h2>
+            <p>Join thousands of satisfied traders who trust BullBear</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"BullBear has transformed how I trade. The platform is intuitive and the analytics are top-notch."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="{{ url_for('static', filename='images/avatar1.jpg') }}" alt="User Avatar" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>Day Trader</p>
+                    </div>
+                </div>
             </div>
-            <div class="support-option">
-                <h3>Phone Support</h3>
-                <p>+1 (555) 123-4567</p>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"The best trading platform I've used. The real-time data and charts are exceptional."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="{{ url_for('static', filename='images/avatar2.jpg') }}" alt="User Avatar" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4>Michael Chen</h4>
+                        <p>Investment Analyst</p>
+                    </div>
+                </div>
             </div>
-            <div class="support-option">
-                <h3>Live Chat</h3>
-                <p>Available 24/7 on our website</p>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"Outstanding customer service and a robust platform. Couldn't ask for more!"</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="{{ url_for('static', filename='images/avatar3.jpg') }}" alt="User Avatar" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4>Emma Davis</h4>
+                        <p>Portfolio Manager</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</section> -->
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to Start Trading?</h2>
+            <p>Join thousands of traders and start your investment journey today.</p>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Create Free Account</a>
+            {% else %}
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
 {% endblock %}

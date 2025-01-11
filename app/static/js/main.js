@@ -34,10 +34,22 @@ document.addEventListener('DOMContentLoaded', function() {
             if (message) {
                 addMessage('user', message);
                 chatInput.value = '';
-                // Simulate bot response (replace with actual API call in production)
-                setTimeout(() => {
-                    addMessage('bot', 'Thank you for your message. Our team will get back to you soon.');
-                }, 1000);
+                // Send message to the server and get a response
+                fetch('/api/chatbot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    addMessage('bot', data.response);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    addMessage('bot', 'Sorry, there was an error processing your request.');
+                });
             }
         });
 
@@ -60,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const quantity = formData.get('quantity');
             const action = formData.get('action');
 
-            // Send trade request to server (replace with actual API call)
+            // Send trade request to server
             fetch('/api/trade', {
                 method: 'POST',
                 headers: {
@@ -74,12 +86,12 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert(`Trade successful: ${action} ${quantity} shares of ${symbol}`);
+                if (data.message) {
+                    alert(`Trade successful: ${data.message}`);
                     // Update user balance and portfolio (you may want to refresh the page or update specific elements)
                     location.reload();
                 } else {
-                    alert(`Trade failed: ${data.message}`);
+                    alert(`Trade failed: ${data.error}`);
                 }
             })
             .catch(error => {
@@ -97,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const changeCell = row.querySelector('td:nth-child(4)');
             if (priceCell && changeCell) {
                 const currentPrice = parseFloat(priceCell.textContent.replace('$', ''));
-                const newPrice = currentPrice + (Math.random() - 0.5);
+                const newPrice = currentPrice + (Math.random() - 0.5); // Simulated price change
                 const priceChange = ((newPrice - currentPrice) / currentPrice) * 100;
 
                 priceCell.textContent = `$${newPrice.toFixed(2)}`;
@@ -204,4 +216,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('All scripts loaded and initialized successfully.');
 });
-

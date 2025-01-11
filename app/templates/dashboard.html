@@ -49,36 +49,6 @@
                 </table>
             </div>
         </div>
-
-        <!-- <div class="dashboard-card">
-            <h2>Market Overview</h2>
-            <div class="table-container">
-                <table id="market-data-table">
-                    <thead>
-                        <tr>
-                            <th>Symbol</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Change</th>
-                            <th>Volume</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for stock in stocks %}
-                        <tr>
-                            <td>{{ stock.symbol }}</td>
-                            <td>{{ stock.name }}</td>
-                            <td>${{ "%.2f"|format(stock.price) }}</td>
-                            <td class="{{ 'text-success' if stock.change > 0 else 'text-danger' }}">
-                                {{ "%.2f"|format(stock.change) }}%
-                            </td>
-                            <td>{{ stock.volume }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div> -->
     </div>
 </div>
 
