@@ -11,12 +11,7 @@
     <div class="auth-container">
         <div class="auth-form-container">
             <a href="/" class="auth-logo">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
-                    <path d="M2 17L12 22L22 17" fill="currentColor"/>
-                    <path d="M2 12L12 17L22 12" fill="currentColor"/>
-                </svg>
-                YourLogo
+                <img src="{{ url_for('static', filename='images/logo.png') }}" width="75" height="75" alt="Logo" />
             </a>
             <h2>Welcome Back</h2>
         <form method="POST">

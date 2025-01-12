@@ -121,7 +121,6 @@ def search_stock():
     query = request.args.get('query', '')
     if not query:
         return jsonify([])
-
     try:
         stock = yf.Ticker(query)
         stock_info = stock.info
